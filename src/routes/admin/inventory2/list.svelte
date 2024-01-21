@@ -5,13 +5,12 @@
             <thead>
                 <tr>
                     <th>No</th>
-                    <th>ID obat</th>
-                    <th>Nama Obat</th>
-                    <th>Exp</th>
-                    <th>Min Stok</th>
-                    <th>Stok Awal Bulan</th>
-                    <th>Jumlah Terpakai</th>
-                    <th>Stok Akhir Bulan</th>
+                    <th>id Alat</th>
+                    <th>Nama Alat</th>
+                    <th>Tanggal Pembelian</th>
+                    <th>Tanggal Kalibrasi Terakhir</th>
+                    <th>Kondisi Alat</th>
+                    <th>Keterangan</th>
                 </tr>
             </thead>
             <tbody>
@@ -19,13 +18,11 @@
                 <tr>
                     <th>1</th>
                     <th>5</th>
-                    <td>Bapak Prhopent</td>
+                    <td>Stetoskop</td>
                     <td>10-02-2002</td>
-                    <td>50</td>
-                    <td>200</td>
-                    <td>30</td>
-                    <td>30</td>
-                    
+                    <td>10-02-2002</td>
+                    <td>Baik</td>
+                    <td>Tidak sekali pakai</td>
                 </tr>
                 <!-- row 2 -->
                 

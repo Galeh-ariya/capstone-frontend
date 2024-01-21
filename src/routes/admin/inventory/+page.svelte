@@ -30,7 +30,7 @@
 	<div class="bg-[#1C2434] text-white w-64 fixed  h-full z-10">
 		<!-- Logo -->
 		<div class="flex items-center justify-center py-4">
-			<img src="../../unusa.png" alt="Logo" class="h-12 w-12" />
+			<img src="../../Logo_Klinik.png" alt="Logo" class="h-16 w-15" />
 		</div>
 
 		<!-- Menu -->
@@ -82,7 +82,6 @@
 						on:click={addHandler}
 						class="block py-2 px-4 hover:bg-gray-700">Add</a
 					>
-					<a href="/" class="block py-2 px-4 hover:bg-gray-700">Item 3</a>
 				</div>
 			{/if}
 
@@ -113,7 +112,6 @@
 				<div class="ml-2">
 					<a href="/admin/inventory" on:click={listHandler} class="block py-2 px-4 hover:bg-gray-700">List</a>
 					<a href="/admin/inventory" on:click={addHandler} class="block py-2 px-4 hover:bg-gray-700">Add</a>
-					<a href="/" class="block py-2 px-4 hover:bg-gray-700">Item 3</a>
 				</div>
 			{/if}
 

@@ -62,9 +62,9 @@
 						<li class="group">
 							<button
 								class="bg-red-600 p-3 btn rounded-md hover:text-black text-base text-white py-2 mx-8 cursor-pointer flex lg:font-semibold"
-								id="home"
+								id="Log Out"
 							>
-								Home
+								Log Out
 							</button>
 						</li>
 					</ul>
@@ -107,7 +107,7 @@
 						<!-- head -->
 						<thead>
 							<tr class="bg-[#66D3D6] text-bold text-white">
-								<th>ANAMENESA</th>
+								<th>ANAMESA</th>
 								<th>DIAGNOSA</th>
 								<th>TERAPI</th>
 								<th>KETERANGAN</th>

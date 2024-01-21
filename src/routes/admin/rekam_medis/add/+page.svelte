@@ -9,7 +9,7 @@
 			<form action="">
 				<input
 					type="text"
-					placeholder="Anamnesa"
+					placeholder="Anamesa"
 					class="input input-bordered w-full max-w-xs text-[#6C757D]"
 				/>
 				<input

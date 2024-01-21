@@ -19,6 +19,18 @@
 								/>
 								<input
 									type="text"
+									placeholder="E-mail"
+									name="E-mail"
+									class="input input-bordered w-full max-w-xs"
+								/>
+								<input
+									type="text"
+									placeholder="Jenis Kelamin"
+									name="Jenis Kelamin"
+									class="input input-bordered w-full max-w-xs"
+								/>
+								<input
+									type="text"
 									name="tempat_lahir"
 									placeholder="Tempat Lahir"
 									class="input border-[#cdc9c9] mt-2 w-28 textarea-xs"
@@ -70,9 +82,9 @@
 									name="instansi"
 									class="input input-bordered w-full max-w-xs mt-2"
 								/>
-                                <button class="btn bg-[#66D3D6] text-white w-28 font-semibold fixed ml-1 mt-2">Tambah</button>
+								<div class="card-actions justify-end mt-2">
+							<button class="btn btn-accent text-white">Simpan</button>
 							</div>
-							
 						</div>
 					</form>
 				</div>

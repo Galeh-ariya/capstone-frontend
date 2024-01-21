@@ -36,7 +36,7 @@
 	<div class="container">
 		<div class="flex items-center justify-between relative">
 			<div class="px-4">
-				<img src="unusa.png" alt="unusa" class="w-16 py-6 block" />
+				<img src="Logo_Klinik.png" alt="unusa" class="w-16 py-6 block" />
 			</div>
 			<div class="flex items-center px-4">
 				<button
@@ -95,8 +95,7 @@
 		<div class="ml-10" id="well">
 			<h1 class="text-5xl font-bold text-white mb-4">KLIKNIK <br /> PRATAMA UNUSA|</h1>
 			<p class="text-white mb-4">
-				Klinik pratama adalah salah satu klinik milik UNUSA yang berdiri sejak tahun 500 sebelum
-				masehi
+				Klinik pratama merupakan Fasilitas Kesehatan yang diberikan Universitas Nahdlatul Ulama Surabaya untuk Karyawan dan Mahasiswa UNUSA
 			</p>
 			<div class="flex items-center">
 				<a href="/login"><button class="btn bg-white text-[#66D3D6] hover:bg-white mr-3">Login</button></a>
@@ -114,7 +113,7 @@
 								d="M5 9a7 7 0 0 1 14 0v1.035c1.696.243 3 1.702 3 3.465v.25c0 1.775-1.531 3.331-3.332 3.248c-.74 2.12-2.622 3.549-4.653 3.911c-.47.172-1.026.091-1.515.091a1.5 1.5 0 0 1 0-3c.793 0 1.671-.115 2.207.609C16.003 17.992 17 16.689 17 15V9A5 5 0 0 0 7 9v6.25A1.75 1.75 0 0 1 5.25 17A3.25 3.25 0 0 1 2 13.75v-.25a3.5 3.5 0 0 1 3-3.465z"
 							/></g
 						></svg
-					>Tanya Cs</button
+					>Tanya CS</button
 				>
 			</div>
 		</div>

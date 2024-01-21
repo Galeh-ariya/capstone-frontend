@@ -26,7 +26,7 @@
 	<div class="container">
 		<div class="flex items-center justify-between relative">
 			<div class="px-4">
-				<img src="unusa.png" alt="unusa" class="w-16 py-6 block" />
+				<img src="Logo_Klinik.png" alt="unusa" class="w-16 py-6 block" />
 			</div>
 			<div class="flex items-center px-4">
 				<button

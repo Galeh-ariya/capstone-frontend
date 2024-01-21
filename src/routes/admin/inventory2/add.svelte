@@ -7,12 +7,6 @@
 					<form action="">
 						<input
 							type="text"
-							name="ID Obat"
-							placeholder="ID Obat"
-							class="input input-bordered w-full max-w-xs"
-						/>
-						<input
-							type="text"
 							placeholder="Nama Obat"
 							name="name"
 							class="input input-bordered w-full max-w-xs"
@@ -59,16 +53,15 @@
 					<form action="">
 						<input
 							type="text"
-							name="ID Obat"
 							placeholder="ID Obat"
-							class="input input-bordered w-39 h-12" 
+							name="ID obat"
+							class="input input-bordered w-full max-w-xs"
 						/>
-						<button class="btn btn-accent text-white">Cari</button>
 						<input
 							type="text"
 							placeholder="Nama Obat"
 							name="name"
-							class="input input-bordered w-39 h-12" 
+							class="input input-bordered w-full max-w-xs"
 						/>
 						<label class="form-control w-full max-w-xs mt-2">
 							<div class="label">
@@ -97,6 +90,7 @@
 							name="name"
 							class="input input-bordered w-full max-w-xs mt-2"
 						/>
+                        
 						<div class="card-actions justify-end mt-2">
 							<button class="btn btn-accent text-white">Simpan</button>
 						</div>

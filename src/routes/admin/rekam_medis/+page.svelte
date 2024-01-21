@@ -30,7 +30,7 @@
 	<div class="bg-[#1C2434] text-white w-64 relative h-full z-10">
 		<!-- Logo -->
 		<div class="flex items-center justify-center py-4">
-			<img src="../../unusa.png" alt="Logo" class="h-12 w-12" />
+			<img src="../../Logo_Klinik.png" alt="Logo" class="h-16 w-15" />
 		</div>
 
 		<!-- Menu -->
