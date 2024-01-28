@@ -1,13 +1,66 @@
+<script>
+	import { onMount } from 'svelte';
+
+	/**
+	 * @type {any}
+	 */
+	let dataPasien;
+
+	onMount(() => {
+		const url = new URL(window.location.href);
+		const message = url.searchParams.get('message');
+
+		fetch('http://localhost:8080/api/users', {
+			method: 'GET',
+			headers: {
+				'Content-type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Methods': 'GET, POST, DELETE'
+			}
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				dataPasien = data.data;
+				console.log(data);
+			})
+			.catch((err) => console.log(err));
+	});
+
+	let data = '';
+	const handleInput = async () => {
+		fetch(`http://localhost:8080/api/users/search?name=${data}`, {
+			method: 'GET',
+			headers: {
+				'Content-type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Methods': 'GET, POST, DELETE'
+			}
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				dataPasien = data.data;
+				console.log(data);
+			})
+			.catch((err) => console.log(err));
+	};
+</script>
+
 <!-- Main Content -->
 <div class="flex-1">
 	<!-- Main Content -->
-	<div class="p-10">
+	<div class="p-10 ml-60">
 		<!-- Your main content here -->
 		<h1 class="text-xl font-bold">List Pasien</h1>
 
 		<div class="container flex justify-end">
-			<input type="text" placeholder="Type here" class="input input-bordered w-22 h-12" />
-			<button class="btn bg-[#66D3D6] text-white font-semibold font-sm">CARI</button>
+			<input
+				on:input={handleInput}
+				bind:value={data}
+				type="text"
+				placeholder="Type here"
+				class="input input-bordered w-22 h-12"
+			/>
+			<!-- <button class="btn bg-[#66D3D6] text-white font-semibold font-sm">CARI</button> -->
 			<button
 				><svg xmlns="http://www.w3.org/2000/svg" class="h-11 w-11 mx-2" viewBox="0 0 24 24"
 					><path
@@ -25,70 +78,39 @@
 					<thead>
 						<tr>
 							<th></th>
-							<th>Tanggal</th>
 							<th>No RM</th>
 							<th>Nama</th>
+							<th>gender</th>
 							<th>TTL</th>
 							<th>Instansi</th>
 							<th>Aksi</th>
 						</tr>
 					</thead>
-					<tbody>
-						<!-- row 1 -->
-						<tr>
-							<th>1</th>
-							<td>10-10-2024</td>
-							<td>10002</td>
-							<td>Galeh Ariya Irwana</td>
-							<td>10-10-2002</td>
-							<td>UNUSA</td>
-							<td>
-								<a href="/admin/rekam_medis/list" class="bg-[#FFBE00] p-1 text-white font-semibold rounded-sm"
-									>Detail</a
-								>
-								|
-								<a href="/admin/rekam_medis/add" class="bg-[#00A96E] p-1 text-white font-semibold rounded-sm"
-									>Tambah</a
-								>
-							</td>
-						</tr>
-						<!-- row 2 -->
-						<tr class="hover">
-							<th>1</th>
-							<td>10-10-2024</td>
-							<td>10002</td>
-							<td>Galeh Ariya Irwana</td>
-							<td>10-10-2002</td>
-							<td>UNUSA</td>
-							<td>
-								<a href="unusa.ac.id" class="bg-[#FFBE00] p-1 text-white font-semibold rounded-sm"
-									>Detail</a
-								>
-								|
-								<a href="unusa.ac.id" class="bg-[#00A96E] p-1 text-white font-semibold rounded-sm"
-									>Tambah</a
-								>
-							</td>
-						</tr>
-						<!-- row 3 -->
-						<tr>
-							<th>1</th>
-							<td>10-10-2024</td>
-							<td>10002</td>
-							<td>Galeh Ariya Irwana</td>
-							<td>10-10-2002</td>
-							<td>UNUSA</td>
-							<td>
-								<a href="unusa.ac.id" class="bg-[#FFBE00] p-1 text-white font-semibold rounded-sm"
-									>Detail</a
-								>
-								|
-								<a href="unusa.ac.id" class="bg-[#00A96E] p-1 text-white font-semibold rounded-sm"
-									>Tambah</a
-								>
-							</td>
-						</tr>
-					</tbody>
+					{#if dataPasien}
+						{#each dataPasien as pasien, i}
+							<tbody class="body">
+								<tr class="hover">
+									<th>{++i}</th>
+									<td>{pasien.noRm}</td>
+									<td>{pasien.name}</td>
+									<td>{pasien.gender}</td>
+									<td>{pasien.tempat_lahir + ', ' + pasien.tanggal_lahir}</td>
+									<td>{pasien.instansi}</td>
+									<td>
+										<a
+											href="/admin/rekam_medis/list?rm={pasien.noRm}"
+											class="bg-[#FFBE00] p-1 text-white font-semibold rounded-sm">Detail</a
+										>
+										|
+										<a
+											href="/admin/rekam_medis/add?rm={pasien.noRm}"
+											class="bg-[#00A96E] p-1 text-white font-semibold rounded-sm">Tambah</a
+										>
+									</td>
+								</tr>
+							</tbody>
+						{/each}
+					{/if}
 				</table>
 			</div>
 		</div>

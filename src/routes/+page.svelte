@@ -125,7 +125,7 @@
 			<img src="jadwal.png" alt="jadwal" class="w-96" />
 		</div>
 		<div>
-			<img src="img-hero.png" alt="dokter fifin" class="dr ml-28 hidden lg:block w-[27rem]" />
+			<img src="img-hero.png" alt="dokter fifin" class="dr mx-auto hidden lg:block w-[40rem]" />
 		</div>
 	</div>
 </section>

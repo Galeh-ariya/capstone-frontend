@@ -2,6 +2,37 @@
 	import '../../../app.css';
 	import Listt from './list.svelte';
 	import Add from './add.svelte';
+	import { onMount } from 'svelte';
+
+	var response = {
+		name: '',
+		role: '',
+		token: ''
+	};
+
+	let dataPasien;
+
+	onMount(() => {
+		const url = new URL(window.location.href);
+		const message = url.searchParams.get('message');
+
+		fetch('http://localhost:8080/api/users/current', {
+			method: 'GET',
+			headers: {
+				'Content-type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Methods': 'GET, POST, DELETE',
+				'X-API-TOKEN': `${message}`
+			}
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				response = data.data;
+				console.log(data);
+			})
+			.catch((err) => console.log(err));
+
+	});
 
 	let openRm = false;
 	let openInv = false;
@@ -23,11 +54,31 @@
 	function addHandler() {
 		page = 'add';
 	}
+
+	const logoutHandle = async () => {
+		const url = new URL(window.location.href);
+		const message = url.searchParams.get('message');
+
+		fetch('http://localhost:8080/api/auth/logout', {
+			method: 'DELETE',
+			headers: {
+				'Content-type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Methods': 'GET, POST, DELETE',
+				'X-API-TOKEN': `${message}`
+			}
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				location.href = '/';
+			})
+			.catch((err) => console.log(err));
+	};
 </script>
 
 <div class="flex h-screen bg-gray-200">
 	<!-- Sidebar -->
-	<div class="bg-[#1C2434] text-white w-64 relative h-full z-10">
+	<div class="bg-[#1C2434] text-white w-64 fixed h-full z-10">
 		<!-- Logo -->
 		<div class="flex items-center justify-center py-4">
 			<img src="../../Logo_Klinik.png" alt="Logo" class="h-16 w-15" />
@@ -35,7 +86,10 @@
 
 		<!-- Menu -->
 		<nav class="mt-6">
-			<a href="/admin" class="py-2 px-4 hover:bg-gray-700 flex items-center">
+			<a
+				href="/admin?message={response.token}"
+				class="py-2 px-4 hover:bg-gray-700 flex items-center"
+			>
 				<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-9" viewBox="0 0 1024 1024"
 					><path
 						fill="currentColor"
@@ -73,12 +127,12 @@
 				<!-- Dropdown items -->
 				<div class="ml-2">
 					<a
-						href="/admin/rekam_medis/"
+						href="/admin/rekam_medis?message={response.token}"
 						on:click={listHandler}
 						class="block py-2 px-4 hover:bg-gray-700">List</a
 					>
 					<a
-						href="/admin/rekam_medis/"
+						href="/admin/rekam_medis?message={response.token}"
 						on:click={addHandler}
 						class="block py-2 px-4 hover:bg-gray-700">Add</a
 					>
@@ -95,7 +149,7 @@
 						d="m15.5 19.925l-4.25-4.25l1.4-1.4l2.85 2.85l5.65-5.65l1.4 1.4zM21 10h-2V5h-2v3H7V5H5v14h6v2H5q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h4.175q.275-.875 1.075-1.437T12 1q1 0 1.788.563T14.85 3H19q.825 0 1.413.588T21 5zm-9-5q.425 0 .713-.288T13 4q0-.425-.288-.712T12 3q-.425 0-.712.288T11 4q0 .425.288.713T12 5"
 					/></svg
 				>
-				<a href="/admin/inventory"><span>Inventory Obat</span></a>
+				<a href="/admin/inventory?message={response.token}"><span>Inventory Obat</span></a>
 				<svg
 					class="h-5 w-5"
 					fill="none"
@@ -110,24 +164,28 @@
 			{#if openInv}
 				<!-- Dropdown items -->
 				<div class="ml-2">
-					<a href="/admin/inventory" class="block py-2 px-4 hover:bg-gray-700">list</a>
-					<a href="/admin/inventory" class="block py-2 px-4 hover:bg-gray-700">Add</a>
-					<a href="/" class="block py-2 px-4 hover:bg-gray-700">Item 3</a>
+					<a
+						href="/admin/inventory?message={response.token}"
+						class="block py-2 px-4 hover:bg-gray-700">list</a
+					>
+					<a
+						href="/admin/inventory?message={response.token}"
+						class="block py-2 px-4 hover:bg-gray-700">Add</a
+					>
 				</div>
 			{/if}
-
-			<a href="/" class="block py-2 px-4 hover:bg-gray-700">Settings</a>
 		</nav>
 	</div>
 
 	<!-- Main Content -->
-	<div class="flex-1">
+	<div class="flex-1 overflow-y-scroll">
 		<!-- Navbar -->
 		<nav class="bg-[#FFF] text-black p-4 shadow-sm">
-			<div class="flex items-center justify-end">
+			<div class="flex items-center justify-end space-x-6">
 				<div>
-					<p class="px-3 py-1 text-right hover:bg-gray-700">Galeh Ariya Irwana <br /> Admin</p>
+					<p class="px-3 py-1 text-right">{response.name} <br /> Admin</p>
 				</div>
+				<button on:click={logoutHandle} class="btn bg-red-600 text-white">Logout</button>
 			</div>
 		</nav>
 

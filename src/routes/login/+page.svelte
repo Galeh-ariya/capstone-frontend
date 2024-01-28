@@ -3,22 +3,72 @@
 	import '../../app.css';
 	import { onMount } from 'svelte';
 
-	import { navigate } from 'svelte-routing';
-
-	function pindahKeHalaman2() {
-		navigate('/rm'); 
-	}
+	/**
+	 * @type {HTMLElement | null}
+	 */
+	let modal;
 
 	onMount(() => {
 		const humberger = document.querySelector('#humberger');
 		const navMenu = document.querySelector('#nav-menu');
+		modal = document.getElementById(`my_modal_1`);
 
 		humberger?.addEventListener('click', function () {
 			humberger.classList.toggle('humb-active');
 			navMenu?.classList.toggle('hidden');
 		});
 	});
+
+	const reqBody = {
+		email: '',
+		password: ''
+	};
+
+	const loginHandle = async () => {
+		fetch('http://localhost:8080/api/auth/login', {
+			method: 'POST',
+			body: JSON.stringify(reqBody),
+			headers: {
+				'Content-type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Methods': 'GET, POST'
+			}
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				if (data.data.role == 1) {
+					location.href = '/admin?message=' + data.data.token;
+				} else {
+					location.href = '/rm?message=' + data.data.token;
+				}
+				console.log(data.data.email);
+			})
+			.catch((err) => {
+				// @ts-ignore
+				modal.showModal();
+				// console.log(err);
+			});
+	};
 </script>
+
+<dialog id="my_modal_1" class="modal">
+	<div class="modal-box">
+		<h3 class="font-bold text-lg text-red-600">Failed!</h3>
+		<p class="py-4">Email atau Password Salah!</p>
+		<svg xmlns="http://www.w3.org/2000/svg" class="w-32 h-32 animate-bounce text-red-600 mt-10 mx-auto" viewBox="0 0 512 512"
+			><path
+				fill="currentColor"
+				d="M256 48a208 208 0 1 1 0 416a208 208 0 1 1 0-416m0 464a256 256 0 1 0 0-512a256 256 0 1 0 0 512m-81-337c-9.4 9.4-9.4 24.6 0 33.9l47 47l-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47l47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47l47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47l-47-47c-9.4-9.4-24.6-9.4-33.9 0"
+			/></svg
+		>
+		<div class="modal-action">
+			<form method="dialog">
+				<!-- if there is a button in form, it will close the modal -->
+				<button class="btn">Close</button>
+			</form>
+		</div>
+	</div>
+</dialog>
 
 <header
 	class="absolute top-0 left-0 w-full flex items-center justify-center z-10 shadow-md bg-white"
@@ -78,24 +128,31 @@
 	<div class="card w-96 bg-base-100 shadow-xl">
 		<div class="card-body font-semibold mx-4">
 			<h2 class="card-title justify-center mb-6 text-[#6C757D]">Login</h2>
-			<form action="">
+			<form on:submit|preventDefault={loginHandle}>
 				<input
 					type="text"
 					placeholder="Email"
 					class="input input-bordered w-full max-w-xs text-[#6C757D] mb-5"
+					name="email"
+					bind:value={reqBody.email}
 				/>
 				<input
 					type="password"
 					placeholder="Password"
 					class="input input-bordered w-full max-w-xs text-[#6C757D] mb-5"
+					name="password"
+					bind:value={reqBody.password}
 				/>
 				<div class="card-actions justify-center">
-					<button on:click={pindahKeHalaman2} class="btn bg-[#66D3D6] text-white w-full font-semibold">LOGIN</button>
+					<button
+						type="submit"
+						name="submit"
+						class="btn bg-[#66D3D6] text-white w-full font-semibold">LOGIN</button
+					>
 				</div>
 			</form>
 		</div>
 	</div>
 </section>
 
-
-
+<!-- <button class="btn" onclick="my_modal_1.showModal()">open modal</button> -->

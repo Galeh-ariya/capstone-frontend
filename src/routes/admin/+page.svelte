@@ -1,6 +1,7 @@
 <script>
 	import './dashboard.css';
 	import '../../app.css';
+	import { onMount } from 'svelte';
 
 	let openRm = false;
 	let openInv = false;
@@ -12,11 +13,79 @@
 	function toggleInv() {
 		openInv = !openInv;
 	}
+
+	var response = {
+		name: '',
+		role: '',
+		token: ''
+	};
+
+	let dataPengunjung = {
+		totalAll: '',
+		totalUserK: '',
+		totalUserM: '' 
+	};
+
+	onMount(() => {
+		const url = new URL(window.location.href);
+		const message = url.searchParams.get('message');
+
+		fetch('http://localhost:8080/api/users/current', {
+			method: 'GET',
+			headers: {
+				'Content-type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Methods': 'GET, POST, DELETE',
+				'X-API-TOKEN': `${message}`
+			}
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				response = data.data;
+				console.log(data);
+			})
+			.catch((err) => console.log(err));
+
+		fetch(`http://localhost:8080/api/users/total`, {
+			method: 'GET',
+			headers: {
+				'Content-type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Methods': 'GET, POST, DELETE'
+			}
+		})
+		.then((res) => res.json())
+		.then((data) => {
+			dataPengunjung = data.data
+			console.log(data)
+		})
+		.catch((err) => console.log(err));
+	});
+
+	const logoutHandle = async () => {
+		const url = new URL(window.location.href);
+		const message = url.searchParams.get('message');
+
+		fetch('http://localhost:8080/api/auth/logout', {
+			method: 'DELETE',
+			headers: {
+				'Content-type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Methods': 'GET, POST, DELETE',
+				'X-API-TOKEN': `${message}`
+			}
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				location.href = '/';
+			})
+			.catch((err) => console.log(err));
+	};
 </script>
 
-<div class="flex h-screen bg-gray-200">
+<div class="flex h-screen bg-gray-200 relative">
 	<!-- Sidebar -->
-	<div class="bg-[#1C2434] text-white w-64">
+	<div class="bg-[#1C2434] text-white w-64 fixed h-full z-10">
 		<!-- Logo -->
 		<div class="flex items-center justify-center py-4">
 			<img src="Logo_Klinik.png" alt="Logo" class="h-16 w-15" />
@@ -24,7 +93,10 @@
 
 		<!-- Menu -->
 		<nav class="mt-6">
-			<a href="/admin" class="py-2 px-4 hover:bg-gray-700 flex items-center">
+			<a
+				href="/admin?message={response.token}"
+				class="py-2 px-4 hover:bg-gray-700 flex items-center"
+			>
 				<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-9" viewBox="0 0 1024 1024"
 					><path
 						fill="currentColor"
@@ -46,7 +118,7 @@
 						clip-rule="evenodd"
 					/></svg
 				>
-				<a href="/admin/rekam_medis"><span>Rekam Medis</span></a>
+				<a href="/admin/rekam_medis?message={response.token}"><span>Rekam Medis</span></a>
 				<svg
 					class="h-5 w-5"
 					fill="none"
@@ -61,8 +133,14 @@
 			{#if openRm}
 				<!-- Dropdown items -->
 				<div class="ml-2">
-					<a href="/admin/rekam_medis" class="block py-2 px-4 hover:bg-gray-700">List</a>
-					<a href="/admin/rekam_medis" class="block py-2 px-4 hover:bg-gray-700">Add</a>
+					<a
+						href="/admin/rekam_medis?message={response.token}"
+						class="block py-2 px-4 hover:bg-gray-700">List</a
+					>
+					<a
+						href="/admin/rekam_medis?message={response.token}"
+						class="block py-2 px-4 hover:bg-gray-700">Add</a
+					>
 				</div>
 			{/if}
 
@@ -76,7 +154,7 @@
 						d="m15.5 19.925l-4.25-4.25l1.4-1.4l2.85 2.85l5.65-5.65l1.4 1.4zM21 10h-2V5h-2v3H7V5H5v14h6v2H5q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h4.175q.275-.875 1.075-1.437T12 1q1 0 1.788.563T14.85 3H19q.825 0 1.413.588T21 5zm-9-5q.425 0 .713-.288T13 4q0-.425-.288-.712T12 3q-.425 0-.712.288T11 4q0 .425.288.713T12 5"
 					/></svg
 				>
-				<a href="/admin/inventory"><span>Inventory Obat</span></a>
+				<a href="/admin/inventory?message={response.token}"><span>Inventory Obat</span></a>
 				<svg
 					class="h-5 w-5"
 					fill="none"
@@ -88,26 +166,36 @@
 					></path>
 				</svg>
 			</button>
-			<button class="btn btn-accent text-white">Close</button>
-			<button class="btn btn-accent text-white">Open</button>
+
 			{#if openInv}
 				<!-- Dropdown items -->
 				<div class="ml-2">
-					<a href="/admin/inventory" class="block py-2 px-4 hover:bg-gray-700">List</a>
-					<a href="/admin/inventory" class="block py-2 px-4 hover:bg-gray-700">Add</a>
+					<a
+						href="/admin/inventory?message={response.token}"
+						class="block py-2 px-4 hover:bg-gray-700">List</a
+					>
+					<a
+						href="/admin/inventory?message={response.token}"
+						class="block py-2 px-4 hover:bg-gray-700">Add</a
+					>
 				</div>
 			{/if}
+			<div class="mt-32 ml-10">
+				<button class="btn bg-red-600 btn-warning">Close</button>
+				<button class="btn bg-green-500 text-white">Open</button>
+			</div>
 		</nav>
 	</div>
 
 	<!-- Main Content -->
-	<div class="flex-1">
+	<div class="flex-1 ml-64">
 		<!-- Navbar -->
 		<nav class="bg-[#FFF] text-black p-4 shadow-sm">
-			<div class="flex items-center justify-end">
+			<div class="flex items-center justify-end space-x-6">
 				<div>
-					<p class="px-3 py-1 text-right hover:bg-gray-700">Galeh Ariya Irwana <br /> Admin</p>
+					<p class="px-3 py-1 text-right">{response.name}<br /> Admin</p>
 				</div>
+				<button on:click={logoutHandle} class="btn bg-red-600 text-white">Logout</button>
 			</div>
 		</nav>
 
@@ -121,7 +209,7 @@
 					<div class="card-body text-center">
 						<h2 class="card-title">Mahasiswa</h2>
 						<hr />
-						<p class="text-3xl font-bold mt-3">99</p>
+						<p class="text-3xl font-bold mt-3">{dataPengunjung.totalUserM}</p>
 					</div>
 				</div>
 
@@ -129,7 +217,7 @@
 					<div class="card-body text-center">
 						<h2 class="card-title">Karyawan</h2>
 						<hr />
-						<p class="text-3xl font-bold mt-3">99</p>
+						<p class="text-3xl font-bold mt-3">{dataPengunjung.totalUserK}</p>
 					</div>
 				</div>
 
@@ -137,7 +225,7 @@
 					<div class="card-body text-center">
 						<h2 class="card-title">Total</h2>
 						<hr />
-						<p class="text-3xl font-bold mt-3">99</p>
+						<p class="text-3xl font-bold mt-3">{dataPengunjung.totalAll}</p>
 					</div>
 				</div>
 			</div>

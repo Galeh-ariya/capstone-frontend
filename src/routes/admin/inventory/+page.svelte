@@ -1,7 +1,38 @@
 <script>
 	import '../../../app.css';
-    import List from './list.svelte';
+	import List from './list.svelte';
 	import Add from './add.svelte';
+
+	import { onMount } from 'svelte';
+
+	var response = {
+		name: '',
+		role: '',
+		token: ''
+	};
+
+	let dataPasien;
+
+	onMount(() => {
+		const url = new URL(window.location.href);
+		const message = url.searchParams.get('message');
+
+		fetch('http://localhost:8080/api/users/current', {
+			method: 'GET',
+			headers: {
+				'Content-type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Methods': 'GET, POST, DELETE',
+				'X-API-TOKEN': `${message}`
+			}
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				response = data.data;
+				console.log(data);
+			})
+			.catch((err) => console.log(err));
+	});
 
 	let openRm = false;
 	let openInv = false;
@@ -23,11 +54,31 @@
 	function addHandler() {
 		page = 'add';
 	}
+
+	const logoutHandle = async () => {
+		const url = new URL(window.location.href);
+		const message = url.searchParams.get('message');
+
+		fetch('http://localhost:8080/api/auth/logout', {
+			method: 'DELETE',
+			headers: {
+				'Content-type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Methods': 'GET, POST, DELETE',
+				'X-API-TOKEN': `${message}`
+			}
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				location.href = '/';
+			})
+			.catch((err) => console.log(err));
+	};
 </script>
 
 <div class="flex h-screen bg-gray-200 relative">
 	<!-- Sidebar -->
-	<div class="bg-[#1C2434] text-white w-64 fixed  h-full z-10">
+	<div class="bg-[#1C2434] text-white w-64 fixed h-full z-10">
 		<!-- Logo -->
 		<div class="flex items-center justify-center py-4">
 			<img src="../../Logo_Klinik.png" alt="Logo" class="h-16 w-15" />
@@ -35,7 +86,10 @@
 
 		<!-- Menu -->
 		<nav class="mt-6">
-			<a href="/admin" class="py-2 px-4 hover:bg-gray-700 flex items-center">
+			<a
+				href="/admin?message={response.token}"
+				class="py-2 px-4 hover:bg-gray-700 flex items-center"
+			>
 				<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-9" viewBox="0 0 1024 1024"
 					><path
 						fill="currentColor"
@@ -57,7 +111,7 @@
 						clip-rule="evenodd"
 					/></svg
 				>
-				<a href="/admin/rekam_medis"><span>Rekam Medis</span></a>
+				<a href="/admin/rekam_medis?message={response.token}"><span>Rekam Medis</span></a>
 				<svg
 					class="h-5 w-5"
 					fill="none"
@@ -73,12 +127,11 @@
 				<!-- Dropdown items -->
 				<div class="ml-2">
 					<a
-						href="/admin/rekam_medis/"
-						
+						href="/admin/rekam_medis?message={response.token}"
 						class="block py-2 px-4 hover:bg-gray-700">List</a
 					>
 					<a
-						href="/admin/rekam_medis/"
+						href="/admin/rekam_medis?message={response.token}"
 						on:click={addHandler}
 						class="block py-2 px-4 hover:bg-gray-700">Add</a
 					>
@@ -110,31 +163,34 @@
 			{#if openInv}
 				<!-- Dropdown items -->
 				<div class="ml-2">
-					<a href="/admin/inventory" on:click={listHandler} class="block py-2 px-4 hover:bg-gray-700">List</a>
-					<a href="/admin/inventory" on:click={addHandler} class="block py-2 px-4 hover:bg-gray-700">Add</a>
+					<a
+						href="/admin/inventory?message={response.token}"
+						on:click={listHandler}
+						class="block py-2 px-4 hover:bg-gray-700">List</a
+					>
+					<a href="/admin/inventory?message={response.token}" on:click={addHandler} class="block py-2 px-4 hover:bg-gray-700"
+						>Add</a
+					>
 				</div>
 			{/if}
-
-			<a href="/" class="block py-2 px-4 hover:bg-gray-700">Settings</a>
 		</nav>
 	</div>
 
 	<!-- Main Content -->
-	<div class="flex-1 ml-64">
+	<div class="flex-1 ml-64 text-center mx-auto">
 		<!-- Navbar -->
 		<nav class="bg-[#FFF] text-black p-4 shadow-sm">
-			<div class="flex items-center justify-end">
+			<div class="flex items-center justify-end space-x-8">
 				<div>
-					<p class="px-3 py-1 text-right hover:bg-gray-700">Galeh Ariya Irwana <br /> Admin</p>
+					<p class="px-3 py-1 text-right ">{response.name} <br /> Admin</p>
 				</div>
+				<button on:click={logoutHandle} class="btn bg-red-600 text-white">Logout</button>
 			</div>
 		</nav>
 
-		
-
 		<!-- Main Content -->
 		{#if page == 'list'}
-            <List />
+			<List />
 		{:else if page == 'add'}
 			<Add />
 		{:else}

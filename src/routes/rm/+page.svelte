@@ -2,8 +2,21 @@
 	import './rm.css';
 	import '../../app.css';
 	import { onMount } from 'svelte';
+	import { setContext } from 'svelte';
+
+	var response = {
+		name: '',
+		email: '',
+		instansi: '',
+		gender: '',
+		noRm: '',
+		tempat_lahir: '',
+		tanggal_lahir: ''
+	};
 
 	onMount(() => {
+		const url = new URL(window.location.href);
+		const message = url.searchParams.get('message');
 		const humberger = document.querySelector('#humberger');
 		const navMenu = document.querySelector('#nav-menu');
 
@@ -11,7 +24,65 @@
 			humberger.classList.toggle('humb-active');
 			navMenu?.classList.toggle('hidden');
 		});
+
+		fetch('http://localhost:8080/api/users/current', {
+			method: 'GET',
+			headers: {
+				'Content-type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Methods': 'GET, POST, DELETE',
+				'X-API-TOKEN': `${message}`
+			}
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				response = data.data;
+				// console.log(data);
+			})
+			.catch((err) => console.log(err));
 	});
+
+	const logoutHandle = async () => {
+		const url = new URL(window.location.href);
+		const message = url.searchParams.get('message');
+
+		fetch('http://localhost:8080/api/auth/logout', {
+			method: 'DELETE',
+			headers: {
+				'Content-type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Methods': 'GET, POST, DELETE',
+				'X-API-TOKEN': `${message}`
+			}
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				location.href = '/';
+			})
+			.catch((err) => console.log(err));
+	};
+
+	/**
+	 * @type {any}
+	 */
+	let dataRekam;
+
+	const getDatahandler = async () => {
+		fetch(`http://localhost:8080/api/rm/${response.noRm}`, {
+			method: 'GET',
+			headers: {
+				'Content-type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+				'Access-Control-Allow-Methods': 'GET, POST'
+			}
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				dataRekam = data.data;
+				console.log(data);
+			})
+			.catch((err) => console.log(err));
+	};
 </script>
 
 <header class="fixed top-0 left-0 w-full flex items-center justify-center z-10 shadow-md bg-white">
@@ -61,6 +132,7 @@
 						</li>
 						<li class="group">
 							<button
+								on:click={logoutHandle}
 								class="bg-red-600 p-3 btn rounded-md hover:text-black text-base text-white py-2 mx-8 cursor-pointer flex lg:font-semibold"
 								id="Log Out"
 							>
@@ -74,57 +146,80 @@
 	</div>
 </header>
 
-<section class="bg-[url('bg-hero.png')] mt-24 w-full h-80 pt-20 p-10">
-	<h1 class="text-center font-bold text-white text-3xl mb-8">Biodata Pasien</h1>
-	<div class="container flex justify-around items-center mx-auto gap-x-14 font-semibold">
-		<div class="text-white space-y-5">
-			<h3>Nama <span class="bg-red-600 rounded-md p-1 text-[10px]">Galeh Ariya Irwana</span></h3>
-			<h3>
-				Jabatan <span class="bg-red-600 rounded-md p-1 text-[10px]">Dosen Sistem Informasi</span>
-			</h3>
-			<h3>Instansi <span class="bg-red-600 rounded-md p-1 text-[10px]">UNUSA</span></h3>
+<section class="bg-[url('bg-hero.png')] mt-24 w-full h-[25rem] md:h-80 pt-20 p-10">
+	<h1 class="text-center font-bold text-white text-3xl mb-8">Data Pasien</h1>
+
+	<form>
+		<div class="text-white font-semibold text-center flex justify-around">
+			<div class="mx-4">
+				<div>
+					<label for="">Nama: </label>
+					<input type="text" class="input input-bordered input-sm my-2 w-40 md:w-auto" value="{response.name}" disabled />
+				</div>
+				<div>
+					<label for="">Email: </label>
+					<input type="text" class="input input-bordered input-sm my-2 w-40 md:w-auto" disabled value="{response.email}" />
+				</div>
+				<div>
+					<label for="">Instansi: </label>
+					<input type="text" class="input input-bordered input-sm my-2 w-40 md:w-auto" disabled value="{response.instansi}" />
+				</div>
+			</div>
+			<div >
+				<div>
+					<label for="">TTL: </label>
+					<input type="text" class="input input-bordered input-sm my-2 w-40 md:w-auto" value="{response.tempat_lahir + ', ' + response.tanggal_lahir}" disabled />
+				</div>
+				<div>
+					<label for="">No Rm: </label>
+					<input type="text" class="input input-bordered input-sm my-2 w-40 md:w-auto" disabled value="{response.noRm}" />
+				</div>
+				<div>
+					<label for="">Gender: </label>
+					<input type="text" class="input input-bordered input-sm my-2 w-40 md:w-auto" disabled value="{response.gender}" />
+				</div>
+			</div>
 		</div>
-		<div class="text-white space-y-5">
-			<h3>TTL <span class="bg-red-600 rounded-md p-1 text-[10px]">UNUSA</span></h3>
-			<h3>No RM <span class="bg-red-600 rounded-md p-1 text-[10px]">UNUSA</span></h3>
-			<h3>Gender <span class="bg-red-600 rounded-md p-1 text-[10px]">UNUSA</span></h3>
-		</div>
-	</div>
+	</form>
 </section>
 
 <section class="flex justify-center items-center mt-11">
 	<div class="container p-5">
-		<input type="date" placeholder="Type here" class="input input-bordered w-full max-w-xs mb-5" />
-		<div class="collapse collapse-arrow bg-base-200">
-			<input type="radio" name="my-accordion-2" />
-			<div class="collapse-title text-xl font-medium">
-				<span class="bg-red-600 p-1 rounded-md text-white text-[10px]">19/10/23</span> Demam Berdarah
-				Biru
-			</div>
-			<div class="collapse-content">
-				<div class="overflow-x-auto">
-					<table class="table">
-						<!-- head -->
-						<thead>
-							<tr class="bg-[#66D3D6] text-bold text-white">
-								<th>ANAMESA</th>
-								<th>DIAGNOSA</th>
-								<th>TERAPI</th>
-								<th>KETERANGAN</th>
-							</tr>
-						</thead>
-						<tbody>
-							<!-- row 1 -->
-							<tr>
-								<th>Demam 3 Tahun</th>
-								<td>Demam Berdarah Biru</td>
-								<td>Shoping</td>
-								<td>Obat Uang 100 Juta 1 bulan sekali</td>
-							</tr>
-						</tbody>
-					</table>
+		<button on:click={getDatahandler} class="btn btn-accent text-white">Tampilkan Data</button>
+		{#if dataRekam}
+			{#each dataRekam as rekam}
+				<div class="collapse collapse-arrow bg-base-200">
+					<input type="radio" name="my-accordion-2" />
+					<div class="collapse-title text-xl font-medium">
+						<span class="bg-red-600 p-1 rounded-md text-white text-[10px]">{rekam.checkin}</span>
+						{rekam.diagnosis}
+					</div>
+					<div class="collapse-content">
+						<div class="overflow-x-auto">
+							<table class="table">
+								<!-- head -->
+								<thead>
+									<tr class="bg-[#66D3D6] text-bold text-white">
+										<th>ANAMESA</th>
+										<th>DIAGNOSA</th>
+										<th>TERAPI</th>
+										<th>KETERANGAN</th>
+									</tr>
+								</thead>
+								<tbody>
+									<!-- row 1 -->
+									<tr>
+										<th>{rekam.anamnesa}</th>
+										<td>{rekam.diagnosis}</td>
+										<td>{rekam.therapy}</td>
+										<td>{rekam.jumlahObat}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
 				</div>
-			</div>
-		</div>
+			{/each}
+		{/if}
 	</div>
 </section>
