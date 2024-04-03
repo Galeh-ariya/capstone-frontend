@@ -23,7 +23,7 @@
 	let dataPengunjung = {
 		totalAll: '',
 		totalUserK: '',
-		totalUserM: '' 
+		totalUserM: ''
 	};
 
 	onMount(() => {
@@ -41,10 +41,17 @@
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				response = data.data;
-				console.log(data);
+				if (data.data == null) {
+					location.href = '/login';
+				} else {
+					response = data.data;
+					console.log(data);
+				}
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => {
+				console.log(err);
+				location.href = '/';
+			});
 
 		fetch(`http://localhost:8080/api/users/total`, {
 			method: 'GET',
@@ -54,12 +61,12 @@
 				'Access-Control-Allow-Methods': 'GET, POST, DELETE'
 			}
 		})
-		.then((res) => res.json())
-		.then((data) => {
-			dataPengunjung = data.data
-			console.log(data)
-		})
-		.catch((err) => console.log(err));
+			.then((res) => res.json())
+			.then((data) => {
+				dataPengunjung = data.data;
+				console.log(data);
+			})
+			.catch((err) => console.log(err));
 	});
 
 	const logoutHandle = async () => {

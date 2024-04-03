@@ -46,7 +46,7 @@
 			.catch((err) => {
 				// @ts-ignore
 				modal.showModal();
-				// console.log(err);
+				console.log(err);
 			});
 	};
 </script>

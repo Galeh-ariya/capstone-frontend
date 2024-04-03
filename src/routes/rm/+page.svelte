@@ -36,11 +36,35 @@
 		})
 			.then((res) => res.json())
 			.then((data) => {
+				if(data.data == null) {
+					location.href = '/login'
+				}
 				response = data.data;
 				// console.log(data);
 			})
 			.catch((err) => console.log(err));
 	});
+
+	const umur = (/** @type {string | number | Date} */ u) => {
+		var tanggalLahirObj = new Date(u);
+		var tanggalSaatIni = new Date();
+
+		var tahunLahir = tanggalLahirObj.getFullYear();
+		var bulanLahir = tanggalLahirObj.getMonth() + 1;
+		var hariLahir = tanggalLahirObj.getDate();
+
+		var tahunSaatIni = tanggalSaatIni.getFullYear();
+		var bulanSaatIni = tanggalSaatIni.getMonth() + 1;
+		var hariSaatIni = tanggalSaatIni.getDate();
+
+		var umur = tahunSaatIni - tahunLahir;
+
+		if (bulanSaatIni < bulanLahir || (bulanSaatIni === bulanLahir && hariSaatIni < hariLahir)) {
+			umur--;
+		}
+
+		return umur;
+	};
 
 	const logoutHandle = async () => {
 		const url = new URL(window.location.href);
@@ -154,29 +178,59 @@
 			<div class="mx-4">
 				<div>
 					<label for="">Nama: </label>
-					<input type="text" class="input input-bordered input-sm my-2 w-40 md:w-auto" value="{response.name}" disabled />
+					<input
+						type="text"
+						class="input input-bordered input-sm my-2 w-40 md:w-auto"
+						value={response.name}
+						disabled
+					/>
 				</div>
 				<div>
 					<label for="">Email: </label>
-					<input type="text" class="input input-bordered input-sm my-2 w-40 md:w-auto" disabled value="{response.email}" />
+					<input
+						type="text"
+						class="input input-bordered input-sm my-2 w-40 md:w-auto"
+						disabled
+						value={response.email}
+					/>
 				</div>
 				<div>
 					<label for="">Instansi: </label>
-					<input type="text" class="input input-bordered input-sm my-2 w-40 md:w-auto" disabled value="{response.instansi}" />
+					<input
+						type="text"
+						class="input input-bordered input-sm my-2 w-40 md:w-auto"
+						disabled
+						value={response.instansi}
+					/>
 				</div>
 			</div>
-			<div >
+			<div>
 				<div>
 					<label for="">TTL: </label>
-					<input type="text" class="input input-bordered input-sm my-2 w-40 md:w-auto" value="{response.tempat_lahir + ', ' + response.tanggal_lahir}" disabled />
+					<input
+						type="text"
+						class="input input-bordered input-sm my-2 w-40 md:w-auto"
+						value={response.tempat_lahir + ', ' + response.tanggal_lahir + ', (' + umur(response.tanggal_lahir) + ')'}
+						disabled
+					/>
 				</div>
 				<div>
 					<label for="">No Rm: </label>
-					<input type="text" class="input input-bordered input-sm my-2 w-40 md:w-auto" disabled value="{response.noRm}" />
+					<input
+						type="text"
+						class="input input-bordered input-sm my-2 w-40 md:w-auto"
+						disabled
+						value={response.noRm}
+					/>
 				</div>
 				<div>
 					<label for="">Gender: </label>
-					<input type="text" class="input input-bordered input-sm my-2 w-40 md:w-auto" disabled value="{response.gender}" />
+					<input
+						type="text"
+						class="input input-bordered input-sm my-2 w-40 md:w-auto"
+						disabled
+						value={response.gender}
+					/>
 				</div>
 			</div>
 		</div>
@@ -185,7 +239,7 @@
 
 <section class="flex justify-center items-center mt-11">
 	<div class="container p-5">
-		<button on:click={getDatahandler} class="btn btn-accent text-white">Tampilkan Data</button>
+		<button on:click={getDatahandler} class="btn btn-accent text-white mb-11">Tampilkan Data</button>
 		{#if dataRekam}
 			{#each dataRekam as rekam}
 				<div class="collapse collapse-arrow bg-base-200">
@@ -201,18 +255,31 @@
 								<thead>
 									<tr class="bg-[#66D3D6] text-bold text-white">
 										<th>ANAMESA</th>
+										<th>Pemeriksaan</th>
 										<th>DIAGNOSA</th>
 										<th>TERAPI</th>
-										<th>KETERANGAN</th>
+										<th>Jumlah Obat</th>
 									</tr>
 								</thead>
 								<tbody>
 									<!-- row 1 -->
 									<tr>
-										<th>{rekam.anamnesa}</th>
+										<td>{rekam.anamnesa}</td>
+										<td>{rekam.pemeriksaan}</td>
 										<td>{rekam.diagnosis}</td>
-										<td>{rekam.therapy}</td>
-										<td>{rekam.jumlahObat}</td>
+										<td>
+											<!-- {res.therapy2 != null ? res.therapy2 : ''} -->
+											<li>{rekam.therapy !=  null ? rekam.therapy : ''}</li>
+											<li>{rekam.therapy2 !=  null ? rekam.therapy2 : ''}</li>
+											<li>{rekam.therapy3 !=  null ? rekam.therapy3 : ''}</li>
+											<li>{rekam.therapy4 !=  null ? rekam.therapy4 : ''}</li>
+										</td>
+										<td>
+											<li>{rekam.jumlahObat != null ? rekam.jumlahObat : ''}</li>
+											<li>{rekam.jumlahObat2 != null ? rekam.jumlahObat2 : ''}</li>
+											<li>{rekam.jumlahObat3 != null ? rekam.jumlahObat3 : ''}</li>
+											<li>{rekam.jumlahObat4 != null ? rekam.jumlahObat4 : ''}</li>
+										</td>
 									</tr>
 								</tbody>
 							</table>

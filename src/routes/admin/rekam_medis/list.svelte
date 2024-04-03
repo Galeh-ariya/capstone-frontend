@@ -6,6 +6,14 @@
 	 */
 	let dataPasien;
 
+	let search = {
+		kategoriSearch: "name",
+		data: ""
+	}
+
+	// let kategoriSearch = 'name';
+	// let data = '';
+
 	onMount(() => {
 		const url = new URL(window.location.href);
 		const message = url.searchParams.get('message');
@@ -26,9 +34,8 @@
 			.catch((err) => console.log(err));
 	});
 
-	let data = '';
 	const handleInput = async () => {
-		fetch(`http://localhost:8080/api/users/search?name=${data}`, {
+		fetch(`http://localhost:8080/api/users/search?${search.kategoriSearch}=${search.data}`, {
 			method: 'GET',
 			headers: {
 				'Content-type': 'application/json',
@@ -51,15 +58,21 @@
 	<div class="p-10 ml-60">
 		<!-- Your main content here -->
 		<h1 class="text-xl font-bold">List Pasien</h1>
-
 		<div class="container flex justify-end">
 			<input
 				on:input={handleInput}
-				bind:value={data}
+				bind:value={search.data}
 				type="text"
 				placeholder="Type here"
 				class="input input-bordered w-22 h-12"
 			/>
+
+			<select class="select select-bordered w-1 mx-1" name="kategori" bind:value={search.kategoriSearch}>
+				<option selected value="name">Nama</option>
+				<option value="no_rm">No Rekam Medis</option>
+				<option value="instansi">Instansi</option>
+			</select>
+
 			<!-- <button class="btn bg-[#66D3D6] text-white font-semibold font-sm">CARI</button> -->
 			<button
 				><svg xmlns="http://www.w3.org/2000/svg" class="h-11 w-11 mx-2" viewBox="0 0 24 24"

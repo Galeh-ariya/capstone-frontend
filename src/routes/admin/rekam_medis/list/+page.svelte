@@ -36,7 +36,7 @@
 
 	const backHandle = async () => {
 		window.history.back();
-	}
+	};
 </script>
 
 <header class="fixed top-0 left-0 w-full flex items-center justify-center z-10 shadow-md bg-white">
@@ -63,7 +63,8 @@
 				>
 					<ul class="block md:flex">
 						<li class="group">
-							<button on:click={backHandle}
+							<button
+								on:click={backHandle}
 								class="bg-red-600 p-3 btn rounded-md hover:text-black text-base text-white py-2 mx-8 cursor-pointer flex lg:font-semibold"
 								id="Log Out"
 							>
@@ -98,10 +99,21 @@
 							<tr class="hover">
 								<td>{++i}</td>
 								<td>{res.checkin}</td>
+								<td>{res.pemeriksaan}</td>
 								<td>{res.anamnesa}</td>
 								<td>{res.diagnosis}</td>
-								<td>{res.therapy}</td>
-								<td>{res.jumlahObat}</td>
+								<td>
+									<li>{res.therapy}</li>
+									<li>{res.therapy2 != null ? res.therapy2 : ''}</li>
+									<li>{res.therapy3 != null ? res.therapy3 : ''}</li>
+									<li>{res.therapy4 != null ? res.therapy4 : ''}</li>
+								</td>
+								<td>
+									<li>{res.jumlahObat}</li>
+									<li>{res.jumlahObat2 != null ? res.jumlahObat2 : ''}</li>
+									<li>{res.jumlahObat3 != null ? res.jumlahObat3 : ''}</li>
+									<li>{res.jumlahObat4 != null ? res.jumlahObat4 : ''}</li>
+								</td>
 							</tr>
 						</tbody>
 					{/each}

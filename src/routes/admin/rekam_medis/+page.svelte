@@ -27,11 +27,14 @@
 		})
 			.then((res) => res.json())
 			.then((data) => {
-				response = data.data;
-				console.log(data);
+				if (data.data == null) {
+					location.href = '/login';
+				} else {
+					response = data.data;
+					console.log(data);
+				}
 			})
 			.catch((err) => console.log(err));
-
 	});
 
 	let openRm = false;
